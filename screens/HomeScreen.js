@@ -1,19 +1,41 @@
-import React from "react";
+// HomeScreen.js
+import React, { useState, useEffect } from "react";
 import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HomeScreen({ navigation }) {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = await AsyncStorage.getItem("authToken");
+      if (token) {
+        // You can add more logic here to fetch user details if needed
+        setUser(token); // Set user to token or actual user details if available
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to UFC Fighters Management</Text>
-      <Text style={styles.instruction}>
-        (Click Fighters-Dashboard below to continue)
-      </Text>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("FightersList")}
-      >
-        <Text style={styles.buttonText}>Fighters Dashboard</Text>
-      </TouchableOpacity>
+      {user ? (
+        <>
+          <Text style={styles.title}>Welcome to UFC Fighters Management</Text>
+          <Text style={styles.instruction}>
+            (Click Fighters Dashboard below to continue)
+          </Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("FightersList")}
+          >
+            <Text style={styles.buttonText}>Fighters Dashboard</Text>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <Text style={styles.title}>Loading...</Text>
+      )}
     </View>
   );
 }

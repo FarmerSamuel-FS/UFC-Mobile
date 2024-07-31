@@ -1,3 +1,4 @@
+// FightersListScreen.js
 import React, { useState, useCallback } from "react";
 import {
   View,
@@ -9,13 +10,25 @@ import {
 } from "react-native";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
+import { getToken } from "../AuthServices"; // Import the getToken function
 
 export default function FightersListScreen({ navigation }) {
   const [fighters, setFighters] = useState([]);
 
-  const fetchFighters = useCallback(() => {
+  const fetchFighters = useCallback(async () => {
+    const token = await getToken();
+    if (!token) {
+      console.error("No token found");
+      navigation.navigate("Login"); // Redirect to login if no token is found
+      return;
+    }
+
     axios
-      .get("https://ufc-api-demo-e18d3cbd0a55.herokuapp.com/api/v1/fighters")
+      .get("https://ufc-api-demo-e18d3cbd0a55.herokuapp.com/api/v1/fighters", {
+        headers: {
+          Authorization: `Bearer ${token}`, // Use the token in the request headers
+        },
+      })
       .then((response) => {
         if (response.data && Array.isArray(response.data)) {
           setFighters(response.data);
