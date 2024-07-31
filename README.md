@@ -59,7 +59,7 @@ API Details
 
 The application integrates with a backend API to perform CRUD operations. The base URL for the API is:
 
-https://ufc-api-demo-e18d3cbd0a55.herokuapp.com/api/v1/fighters
+https://ufc-api-demo-e18d3cbd0a55.herokuapp.com/
 
 Endpoints
 
